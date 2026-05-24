@@ -41,9 +41,17 @@ export const experimentationModule: Module = {
         body: 'Identify one primary metric that maps directly to the hypothesis, several secondary metrics to understand mechanism, and guardrail metrics (e.g. latency, revenue) to catch regressions. A successful experiment improves the primary metric without harming guardrails.',
       },
       {
-        heading: 'Common pitfalls',
-        body: 'Network effects occur when treatment and control users interact (social features). Novelty effects inflate early results for any visible UI change. Sample ratio mismatch (SRM) indicates a broken randomisation pipeline and invalidates results.',
-        callout: 'Always run a pre-experiment A/A test or check the assignment ratio before analysing results.',
+        heading: 'Sample ratio mismatch (SRM)',
+        body: 'SRM occurs when the observed ratio of users assigned to treatment vs. control differs significantly from the configured ratio. Causes: buggy assignment logic, bot traffic filtered differently across variants, server-side errors dropping treatment users. SRM invalidates the experiment — any observed effect may be due to the biased sample, not the treatment.',
+        callout: 'Always check SRM before interpreting results. Use a chi-squared test: expected 50,000 per variant, observed 50,000 control / 48,500 treatment → p < 0.0001. Reject and rerun.',
+      },
+      {
+        heading: 'Novelty and primacy effects',
+        body: 'Novelty effect: users interact with a new UI element simply because it is new, inflating early treatment metrics. Primacy effect: users have learned habits from the old UI, causing early underperformance of the treatment. Both effects distort short-term experiment results. Mitigation: run the experiment long enough (typically 2–4 weeks) for effects to stabilise, and plot daily metrics to diagnose.',
+      },
+      {
+        heading: 'Multivariate testing (MVT)',
+        body: 'MVT tests multiple variables simultaneously (e.g. button colour AND copy AND position). Full factorial designs test all combinations but require large samples. Fractional factorial designs reduce sample requirements but cannot estimate all interaction effects. Use MVT when you have sufficient traffic and want to understand variable interactions.',
       },
     ],
   },
@@ -65,6 +73,35 @@ export const experimentationModule: Module = {
           'The "Buy now" button increased checkout conversion by ~1.1pp (p=0.031). The lift is statistically significant and practically meaningful — at current traffic, this represents ~4,400 additional conversions per month. Recommend shipping.',
         tags: ['Conversion', 'Sample size', 'One-sided test'],
       },
+      {
+        title: 'Detecting and handling a novelty effect',
+        context:
+          'You launch an experiment on a new home feed design. After day 3, treatment shows +8% sessions. But by day 14, the difference has narrowed to +1.5% (p=0.08). What is happening and what do you recommend?',
+        steps: [
+          'Plot daily metric (sessions) separately for treatment and control over the 14 days. If treatment was high in days 1–3 then converged to control, this is a novelty effect.',
+          'Confirm: segment by new vs. returning users. Returning users who saw the old design first are most prone to novelty effects.',
+          'Exclude the first 3–7 days and re-run the analysis on the "steady state" period (days 7–14). If the effect disappears, the initial lift was entirely novelty.',
+          'Check the sample size for the steady-state period only — it may now be underpowered.',
+        ],
+        answer:
+          'The +8% was a novelty effect, not a genuine improvement. The steady-state effect (+1.5%, p=0.08) is not statistically significant. Recommendation: do not ship the new design based on this experiment. Consider running a longer experiment (4 weeks) or testing with only new users who have no prior exposure.',
+        tags: ['Novelty effect', 'Time series', 'Segmentation'],
+      },
+      {
+        title: 'Diagnosing a sample ratio mismatch',
+        context:
+          'Your experiment was configured for a 50/50 split. After 1 week: control = 52,300, treatment = 48,900. You run a chi-squared test. What do you conclude?',
+        steps: [
+          'Calculate the expected count: (52,300 + 48,900) / 2 = 50,600 per variant.',
+          'Chi-squared statistic: χ² = (52300−50600)²/50600 + (48900−50600)²/50600 = 57.1 + 57.1 ≈ 114.',
+          'With df = 1, χ²_critical at p=0.001 is 10.8. Our χ² = 114 >> 10.8 → SRM confirmed.',
+          'Investigate causes: check if treatment has higher error rates (users dropped from treatment on errors), bot filtering differences, or a bug in the assignment logic.',
+          'Do NOT interpret the experiment results until the SRM is resolved.',
+        ],
+        answer:
+          'SRM is confirmed with extremely high confidence. The experiment is invalid. The 3,400 "missing" treatment users were likely dropped due to a bug (e.g. the new feature threw an error for certain device types, causing those users to fall back to control). Fix the bug, reset the experiment, and rerun.',
+        tags: ['SRM', 'Chi-squared', 'Data quality'],
+      },
     ],
   },
   interviewExamples: {
@@ -83,6 +120,21 @@ export const experimentationModule: Module = {
         answer:
           'This answer demonstrates structured debugging: you start with data quality (SRM), then segment to isolate the effect, then use secondary metrics to understand mechanism. Interviewers reward candidates who resist jumping to conclusions and instead propose a systematic investigation plan.',
         tags: ['DAU', 'Debugging', 'Segmentation'],
+      },
+      {
+        title: 'How do you design an experiment when you can\'t randomise at the user level?',
+        context:
+          'You want to test a new pricing page. But your company\'s infrastructure only supports randomisation at the page-visit level, not user level. What are the risks and how do you address them?',
+        steps: [
+          'Identify the problem: session-level randomisation means the same user can see both treatment and control on different visits, violating the assumption that each unit receives only one treatment.',
+          'Quantify the contamination risk: if most users visit the pricing page once, contamination is low. If repeat visitors are common, the effect estimate is biased.',
+          'Analyse: use "first-exposure" analysis — assign each user to the variant they first saw and analyse only that assignment. Discard subsequent visits from the same user.',
+          'Check for carry-over effects: even with first-exposure analysis, users may remember the first version they saw. Plot treatment effect over visit order.',
+          'If possible, implement a cookie-based user-level assignment even if the infrastructure is session-based — store the assignment in a cookie on first visit.',
+        ],
+        answer:
+          'This answer shows systems thinking — you identify the limitation, quantify the bias risk, and propose a practical mitigation (first-exposure analysis + cookies). Interviewers at companies with legacy infrastructure ask this exact question to test whether you can work within constraints.',
+        tags: ['Randomisation unit', 'Contamination', 'Carry-over effects'],
       },
     ],
   },
@@ -117,6 +169,22 @@ export const experimentationModule: Module = {
           'Social feeds create network interference: a treated user\'s feed changes affect the content available to control users (e.g. different posts surface, engagement signals change). This violates the SUTVA assumption. Solutions include cluster-based randomisation (randomise at the social cluster level), ego-network randomisation, or using a holdout of completely isolated users. You should also measure spillover directly.',
         difficulty: 'hard',
         tags: ['Network effects', 'SUTVA', 'Cluster randomisation'],
+      },
+      {
+        id: 'exp-q4',
+        question: 'What is a holdout group and when would you use one instead of a standard A/B test?',
+        hint: 'Think about situations where you need to measure long-term cumulative impact.',
+        answer: 'A holdout group is a small percentage of users (e.g. 5–10%) permanently excluded from a feature or set of features. Unlike an A/B test with a defined end date, holdouts persist indefinitely to measure the long-term cumulative impact of shipping decisions. Use holdouts when: (1) features have long-term effects that A/B tests miss (e.g. email frequency), (2) you want to measure the combined value of many small shipped improvements over a quarter, (3) you need a clean baseline unaffected by any product changes.',
+        difficulty: 'medium',
+        tags: ['Holdout', 'Long-term effects', 'Causal inference'],
+      },
+      {
+        id: 'exp-q5',
+        question: 'Your experiment on a new checkout flow shows a significant improvement in conversion (+2pp), but your revenue metric shows a non-significant −0.5% change. How do you interpret and what do you recommend?',
+        hint: 'Think about what could cause conversion to go up while revenue stays flat or goes down.',
+        answer: 'This is a meaningful conflict. Possible explanations: (1) The new flow is more permissive — it converts more users but they are lower-intent and buy cheaper items, so revenue per conversion fell. (2) The new flow has higher cart abandonment post-conversion (e.g. payment errors). (3) The revenue metric is underpowered — revenue is noisy, and a −0.5% change may be within the confidence interval. Recommendation: do not ship yet. Investigate revenue per converted user and average order value. If revenue per converter is also down, the conversion lift is a hollow win. Run longer or apply CUPED to revenue to improve power.',
+        difficulty: 'hard',
+        tags: ['Metric conflict', 'Revenue', 'Decision-making'],
       },
     ],
   },

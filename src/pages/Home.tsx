@@ -64,12 +64,12 @@ export default function Home() {
     <div className="py-14">
       {/* Hero */}
       <div className="mb-12 text-center">
-        <h1 className="text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white sm:text-5xl">
+        <h1 className="text-4xl font-extrabold tracking-tight text-[#1e3461] sm:text-5xl">
           Ace your{' '}
-          <span className="text-[#aa3bff]">Product Data Science</span>{' '}
+          <span className="text-[#f7941d]">Product Data Science</span>{' '}
           interview
         </h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-gray-500 dark:text-gray-400">
+        <p className="mx-auto mt-4 max-w-xl text-lg text-gray-500">
           Structured prep across the four domains that matter most — from core
           concepts to real interview examples.
         </p>

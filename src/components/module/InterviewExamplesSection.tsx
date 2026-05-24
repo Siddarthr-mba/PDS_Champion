@@ -8,10 +8,10 @@ export default function InterviewExamplesSection({ data }: Props) {
   return (
     <div className="space-y-8 py-4">
       <div>
-        <p className="mb-2 text-xs font-semibold uppercase tracking-widest text-[#aa3bff]">
+        <p className="mb-2 text-xs font-bold uppercase tracking-widest text-[#f7941d]">
           Interview Examples
         </p>
-        <h1 className="text-3xl font-extrabold tracking-tight text-gray-900 dark:text-white">
+        <h1 className="text-3xl font-extrabold tracking-tight text-[#1e3461]">
           Real interview scenarios
         </h1>
       </div>
@@ -20,16 +20,15 @@ export default function InterviewExamplesSection({ data }: Props) {
         {data.scenarios.map((scenario, i) => (
           <article
             key={i}
-            className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-gray-900"
+            className="rounded-2xl border border-gray-200 bg-white"
           >
-            {/* Header */}
-            <div className="border-b border-gray-200 px-6 py-4 dark:border-gray-800">
+            <div className="border-b border-gray-200 px-6 py-4">
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <span className="text-xs font-semibold uppercase tracking-widest text-gray-400">
+                  <span className="text-xs font-bold uppercase tracking-widest text-gray-400">
                     Scenario {i + 1}
                   </span>
-                  <h2 className="mt-0.5 text-base font-bold text-gray-900 dark:text-white">
+                  <h2 className="mt-0.5 text-base font-bold text-[#1e3461]">
                     {scenario.title}
                   </h2>
                 </div>
@@ -38,7 +37,7 @@ export default function InterviewExamplesSection({ data }: Props) {
                     {scenario.tags.map((tag) => (
                       <span
                         key={tag}
-                        className="rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-600 dark:bg-purple-950/40 dark:text-purple-300"
+                        className="rounded-full bg-[#f7941d]/10 px-2 py-0.5 text-xs font-semibold text-[#f7941d]"
                       >
                         {tag}
                       </span>
@@ -49,28 +48,26 @@ export default function InterviewExamplesSection({ data }: Props) {
             </div>
 
             <div className="space-y-5 p-6">
-              {/* Interviewer prompt */}
-              <div className="rounded-xl bg-gray-50 p-4 dark:bg-gray-800/50">
-                <p className="text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+              <div className="rounded-xl bg-[#f4f6f9] p-4">
+                <p className="text-xs font-bold uppercase tracking-wide text-gray-400">
                   Interviewer prompt
                 </p>
-                <p className="mt-1 text-sm italic leading-relaxed text-gray-700 dark:text-gray-300">
+                <p className="mt-1 text-sm italic leading-relaxed text-gray-700">
                   "{scenario.context}"
                 </p>
               </div>
 
-              {/* Strong answer walkthrough */}
               <div>
-                <p className="mb-3 text-xs font-semibold uppercase tracking-wide text-gray-500 dark:text-gray-400">
+                <p className="mb-3 text-xs font-bold uppercase tracking-wide text-gray-400">
                   Strong answer — step by step
                 </p>
                 <ol className="space-y-3">
                   {scenario.steps.map((step, j) => (
                     <li key={j} className="flex gap-3">
-                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#aa3bff]/10 text-xs font-bold text-[#aa3bff]">
+                      <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-[#f7941d]/15 text-xs font-bold text-[#f7941d]">
                         {j + 1}
                       </span>
-                      <p className="text-sm leading-relaxed text-gray-700 dark:text-gray-300">
+                      <p className="text-sm leading-relaxed text-gray-700">
                         {step}
                       </p>
                     </li>
@@ -78,12 +75,11 @@ export default function InterviewExamplesSection({ data }: Props) {
                 </ol>
               </div>
 
-              {/* What makes this answer strong */}
-              <div className="rounded-xl border border-purple-200 bg-purple-50 px-4 py-3 dark:border-purple-900/40 dark:bg-purple-950/30">
-                <p className="text-xs font-semibold uppercase tracking-wide text-purple-700 dark:text-purple-400">
+              <div className="rounded-xl border border-[#1e3461]/20 bg-[#1e3461]/5 px-4 py-3">
+                <p className="text-xs font-bold uppercase tracking-wide text-[#1e3461]/60">
                   Why this answer lands
                 </p>
-                <p className="mt-1 text-sm leading-relaxed text-purple-800 dark:text-purple-200">
+                <p className="mt-1 text-sm leading-relaxed text-[#1e3461]">
                   {scenario.answer}
                 </p>
               </div>

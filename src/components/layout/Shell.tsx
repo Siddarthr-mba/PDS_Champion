@@ -8,7 +8,7 @@ interface ShellProps {
 
 export default function Shell({ children }: ShellProps) {
   return (
-    <div className="flex min-h-screen flex-col bg-white text-gray-900 dark:bg-gray-950 dark:text-gray-100">
+    <div className="flex min-h-screen flex-col bg-[#f4f6f9] text-gray-800">
       <Navbar />
       <div className="mx-auto w-full max-w-7xl flex-1 px-4 sm:px-6">
         {children}

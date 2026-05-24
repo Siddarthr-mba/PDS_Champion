@@ -1,7 +1,19 @@
 @import "tailwindcss";
 
 @theme {
-  --color-accent: #aa3bff;
-  --color-accent-light: rgba(170, 59, 255, 0.1);
+  --font-sans: 'Poppins', system-ui, sans-serif;
+
+  /* PrepVector brand palette */
+  --color-navy:        #1e3461;
+  --color-navy-dark:   #152548;
+  --color-navy-light:  #253f7a;
+  --color-orange:      #f7941d;
+  --color-orange-dark: #e07f0e;
+  --color-orange-light:#fdb913;
+  --color-surface:     #f4f6f9;
+}
+
+* {
+  font-family: 'Poppins', system-ui, sans-serif;
 }
 
