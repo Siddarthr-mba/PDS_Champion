@@ -10,7 +10,16 @@ export default function AppRoutes() {
       <Route
         path="/"
         element={
-          <Shell>
+          <Shell hero={
+            <div className="px-4">
+              <h1 className="text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                Ace your Product Data Science Interview
+              </h1>
+              <p className="mx-auto mt-3 max-w-xl text-base text-white/70">
+                Structured prep across the four domains that matter most.
+              </p>
+            </div>
+          }>
             <Home />
           </Shell>
         }

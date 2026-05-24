@@ -61,20 +61,7 @@ const moduleMeta: ModuleMeta[] = [
 
 export default function Home() {
   return (
-    <div className="py-14">
-      {/* Hero */}
-      <div className="mb-12 text-center">
-        <h1 className="text-4xl font-extrabold tracking-tight text-[#1e3461] sm:text-5xl">
-          Ace your{' '}
-          <span className="text-[#f7941d]">Product Data Science</span>{' '}
-          interview
-        </h1>
-        <p className="mx-auto mt-4 max-w-xl text-lg text-gray-500">
-          Structured prep across the four domains that matter most — from core
-          concepts to real interview examples.
-        </p>
-      </div>
-
+    <div className="py-10">
       {/* Module grid */}
       <div className="grid gap-6 sm:grid-cols-2 xl:grid-cols-4">
         {moduleMeta.map((mod) => (
