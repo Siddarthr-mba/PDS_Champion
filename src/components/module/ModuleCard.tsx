@@ -51,17 +51,12 @@ export default function ModuleCard({
         {description}
       </p>
 
-      {/* Section list */}
+      {/* Section list — display only, not clickable */}
       <ul className="mb-6 space-y-1.5">
         {sections.map(({ slug: sectionSlug, label }) => (
-          <li key={sectionSlug}>
-            <Link
-              to={`/${slug}/${sectionSlug}`}
-              className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600 transition-colors hover:bg-[#f4f6f9] hover:text-[#1e3461]"
-            >
-              <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#f7941d]" />
-              {label}
-            </Link>
+          <li key={sectionSlug} className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-gray-600">
+            <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-[#f7941d]" />
+            {label}
           </li>
         ))}
       </ul>
@@ -69,7 +64,7 @@ export default function ModuleCard({
       {/* CTA */}
       <div className="mt-auto">
         <Link
-          to={`/${slug}/introduction`}
+          to={`/${slug}`}
           className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-[#1e3461] px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-[#152548]"
         >
           Start learning

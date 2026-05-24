@@ -1,4 +1,3 @@
-import { NavLink } from 'react-router-dom';
 import type { ModuleSlug, SectionSlug } from '@/types/content';
 
 const sections: { slug: SectionSlug; label: string }[] = [
@@ -14,7 +13,7 @@ interface SidebarProps {
   moduleTitle: string;
 }
 
-export default function Sidebar({ moduleSlug, moduleTitle }: SidebarProps) {
+export default function Sidebar({ moduleTitle }: SidebarProps) {
   return (
     <aside className="hidden w-56 shrink-0 lg:block">
       <div className="sticky top-20 space-y-1">
@@ -22,19 +21,13 @@ export default function Sidebar({ moduleSlug, moduleTitle }: SidebarProps) {
           {moduleTitle}
         </p>
         {sections.map(({ slug, label }) => (
-          <NavLink
+          <a
             key={slug}
-            to={`/${moduleSlug}/${slug}`}
-            className={({ isActive }) =>
-              `flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
-                isActive
-                  ? 'bg-[#1e3461] text-white'
-                  : 'text-[#1e3461] hover:bg-[#1e3461]/10'
-              }`
-            }
+            href={`#${slug}`}
+            className="flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium text-[#1e3461] transition-colors hover:bg-[#1e3461]/10"
           >
             {label}
-          </NavLink>
+          </a>
         ))}
       </div>
     </aside>
