@@ -14,7 +14,7 @@ export default function ModuleLayout({ moduleSlug, moduleTitle }: ModuleLayoutPr
       <div className="flex gap-8 py-8">
         <Sidebar moduleSlug={moduleSlug} moduleTitle={moduleTitle} />
         <main className="min-w-0 flex-1">
-          <Outlet />
+          <Outlet context={{ moduleSlug }} />
         </main>
       </div>
     </Shell>

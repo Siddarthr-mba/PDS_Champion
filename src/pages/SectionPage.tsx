@@ -1,4 +1,4 @@
-import { useParams, Navigate } from 'react-router-dom';
+import { useParams, useOutletContext, Navigate } from 'react-router-dom';
 import { modules } from '@/content';
 import type { ModuleSlug, SectionSlug } from '@/types/content';
 import IntroductionSection from '@/components/module/IntroductionSection';
@@ -16,10 +16,8 @@ const VALID_SECTIONS: SectionSlug[] = [
 ];
 
 export default function SectionPage() {
-  const { module: moduleSlug, section: sectionSlug } = useParams<{
-    module: ModuleSlug;
-    section: SectionSlug;
-  }>();
+  const { moduleSlug } = useOutletContext<{ moduleSlug: ModuleSlug }>();
+  const { section: sectionSlug } = useParams<{ section: SectionSlug }>();
 
   const mod = modules.find((m) => m.slug === moduleSlug);
 
